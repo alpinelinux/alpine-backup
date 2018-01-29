@@ -1,0 +1,47 @@
+#!/bin/sh
+
+RBU_CONF=/etc/lbu/rbu.conf
+
+if [ -f "$RBU_CONF" ]; then
+	. "$RBU_CONF"
+else
+	echo "Cannot read $RBU_CONF"
+	exit 1
+fi
+
+# set the suffix of backup files when ecryptions is enabled
+[ -n "$ENCRYPTION" ] && export SUFFIX=".$ENCRYPTION"
+
+# convert hostname to intra FQDN
+HOSTNAME=$(hostname)
+if [ -n $HOST ]; then
+        export FQDN="${HOSTNAME}.${HOST}.intra.alpinelinux.org"
+else
+        export FQDN="${HOSTNAME}.intra.alpinelinux.org"
+fi
+
+START_TS=$(date +%s)
+
+LOGFILE="$BACKUP_CACHE/$FQDN-$(date -u "+%Y%m%d%H%M%S").log"
+lbu_commit >>"$LOGFILE" 2>&1
+ret=$?
+
+DURATION=$(($(date +%s)-$START_TS))
+SIZE=0
+STATUS=failed
+
+if [ $ret = 0 ]; then
+	[ -n "$ENCRYPTION" ] && SUFFIX=".$ENCRYPTION"
+	BACKUP="$BACKUP_LOCATION/$(hostname).apkovl.tar.gz${SUFFIX}"
+	SIZE=$(stat -c %s $BACKUP)
+	STATUS=success
+fi
+
+ssh "$BACKUP_SERVER" mkdir -p $FQDN/logs
+scp -q $LOGFILE "$BACKUP_SERVER:$FQDN/logs"
+
+PAYLOAD=$(printf '{ "status": "%s", "size": %u, "duration": %u }' "$STATUS" "$SIZE" "$DURATION")
+JSON=$(printf '{ "host": "%s", "key": "backup", "payload": %s }' "$FQDN" "$PAYLOAD")
+
+mosquitto_pub -h msg.alpinelinux.org -t "monitoring/updates" -m "$JSON"
+

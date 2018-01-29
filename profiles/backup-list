@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "Files included in this backup:"
+apk audit --backup --quiet --recursive --check-permissions
+echo ""

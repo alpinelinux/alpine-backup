@@ -1,0 +1,19 @@
+#!/bin/sh
+
+echo "Sending backup to backup server"
+
+# make sure the destination directory exists
+ssh "$BACKUP_SERVER" mkdir -p $FQDN/week
+
+# get the name of the renamed backup and also rename
+# this backup on the remote to prevent dulpicate upload
+CURR_BACKUP=$(ls -t "$BACKUP_LOCATION" | sed -n 2p)
+if [ -n "$CURR_BACKUP" ]; then
+	HOSTNAME=$(hostname)
+	ssh "$BACKUP_SERVER" mv -f \
+		$FQDN/week/$HOSTNAME.apkovl.tar.gz${SUFFIX} \
+		$FQDN/week/$CURR_BACKUP
+fi
+
+rsync -av --delete-after "$BACKUP_LOCATION/" \
+	"$BACKUP_SERVER":"$FQDN"/week
