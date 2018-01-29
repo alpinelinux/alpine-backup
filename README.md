@@ -52,8 +52,9 @@ you have a backup of that password in case you will need it when restoring.
 
 By default LBU will only backup files located in the `/etc` directory and have
 been modified. To include other files you need to `lbu_include` files and
-directories. Exclusion is possible via `lbu_exclude`. Please check Alpine wiki for
-more information regarding LBU usage.
+directories. Exclusion is possible via `lbu_exclude`. Please check
+[Alpine wiki](http://wiki.alpinelinux.org/wiki/Alpine_local_backup) for more
+information regarding LBU usage.
 
 ### Backup server
 
