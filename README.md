@@ -32,11 +32,11 @@ needed for lbu and its pre/post scripts to function properly.
 
 ### Profiles
 
-Profiles are a setup of LBU pre/post scripts. To use these scripts you should
+Profiles are a set of LBU pre/post scripts. To use these scripts you should
 symlink (or copy) them from the profile directory to one of the following dirs:
 
-* `pre-package.d` (scripts run before LBU creates its backup)
-* `post-package.d` (scripts run after LBU created its backup)
+* `/etc/lbu/pre-package.d` (scripts run before LBU creates its backup)
+* `/etc/lbu/post-package.d` (scripts run after LBU created its backup)
 
 These profiles/scripts will be run by busybox run-parts which means they cannot
 have an extension and need to be executable. If you need to run these scripts
@@ -51,8 +51,8 @@ you have a backup of that password in case you will need it when restoring.
 ### Include non etc files
 
 By default LBU will only backup files located in the `/etc` directory and have
-been modified. To include other files you need to lbu_include files and
-directories. Exclusion is possible via lbu_exclude. Please check Alpine wiki for
+been modified. To include other files you need to `lbu_include` files and
+directories. Exclusion is possible via `lbu_exclude`. Please check Alpine wiki for
 more information regarding LBU usage.
 
 ### Backup server
