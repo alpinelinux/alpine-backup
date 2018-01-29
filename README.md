@@ -14,14 +14,14 @@ features/profiles of RBU are:
 * Copy backup status log to remote location
 * Send status notifications over mqtt
 
-## Usage
-
-### Prerequisite
+## Prerequisite
 
 * POSIX shell
 * LBU (default on Alpine installation)
 * rsync `apk add rsync`
 * mosquitto-pub `apk add mosquitto-clients`
+
+## Usage
 
 ### Configuration
 
