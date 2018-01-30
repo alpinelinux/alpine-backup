@@ -9,6 +9,8 @@ else
 	exit 1
 fi
 
+mkdir -p "$BACKUP_LOCATION" "$BACKUP_CACHE"
+
 # set the suffix of backup files when ecryptions is enabled
 [ -n "$ENCRYPTION" ] && export SUFFIX=".$ENCRYPTION"
 
