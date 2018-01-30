@@ -66,8 +66,8 @@ public key to the backup server.
 
 ### Enable daily backups
 
-Copy the provided `alpine-backup.cron` as `/etc/periodic/daily/alpine-backup` to
-make the backup run every night.
+Copy the provided `alpine-backup` to `/etc/periodic/daily` to make the backup
+run every night.
 
 ## Backup monitoring
 

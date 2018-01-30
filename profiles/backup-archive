@@ -4,10 +4,8 @@ DATE=$(date -u "+%Y%m%d%H%M%S")
 SRC="$(hostname).apkovl.tar.gz${SUFFIX}"
 DEST="$(hostname).${DATE}.tar.gz${SUFFIX}"
 
-# Keep a montly copy of the first day of the month
+# Keep a montly copy on the first day of the month
 if [ "$(date +%d)" = "01" ]; then
 	echo "Archiving montly backup"
-	echo "$SRC"
-	echo "$DEST"
 	ssh "$BACKUP_SERVER" install -Dm644 "$FQDN"/week/"$SRC" "$FQDN"/month/"$DEST"
 fi
