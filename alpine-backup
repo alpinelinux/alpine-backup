@@ -9,7 +9,12 @@ else
 	exit 1
 fi
 
-mkdir -p "$BACKUP_LOCATION" "$BACKUP_CACHE"
+if [ -n "$BACKUP_LOCATION" ] && [ -n " $BACKUP_CACHE" ]; then
+	mkdir -p "$BACKUP_LOCATION" "$BACKUP_CACHE"
+else
+	echo "Error: BACKUP_LOCATION and/or BACKUP_CACHE are not set!"
+	exit 1
+fi
 
 # set the suffix of backup files when ecryptions is enabled
 [ -n "$ENCRYPTION" ] && export SUFFIX=".$ENCRYPTION"
