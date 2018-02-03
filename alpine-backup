@@ -1,19 +1,28 @@
 #!/bin/sh
 
 RBU_CONF=/etc/lbu/rbu.conf
+CMD_DEPS="mosquitto_pub openssl rsync ssh"
+
+die() {
+	echo "$@" >&2
+	exit 1
+}
+
+for cmd in $CMD_DEPS; do
+	command -v $cmd >/dev/null 2>&1 || \
+		die "Error: command \"$cmd\" not found."
+done
 
 if [ -f "$RBU_CONF" ]; then
 	. "$RBU_CONF"
 else
-	echo "Cannot read $RBU_CONF"
-	exit 1
+	die "Cannot read $RBU_CONF"
 fi
 
 if [ -n "$BACKUP_LOCATION" ] && [ -n " $BACKUP_CACHE" ]; then
 	mkdir -p "$BACKUP_LOCATION" "$BACKUP_CACHE"
 else
-	echo "Error: BACKUP_LOCATION and/or BACKUP_CACHE are not set!"
-	exit 1
+	die "Error: BACKUP_LOCATION and/or BACKUP_CACHE are not set."
 fi
 
 # set the suffix of backup files when ecryptions is enabled
@@ -38,7 +47,6 @@ SIZE=0
 STATUS=failed
 
 if [ $ret = 0 ]; then
-	[ -n "$ENCRYPTION" ] && SUFFIX=".$ENCRYPTION"
 	BACKUP="$BACKUP_LOCATION/$(hostname).apkovl.tar.gz${SUFFIX}"
 	SIZE=$(stat -c %s $BACKUP)
 	STATUS=success
