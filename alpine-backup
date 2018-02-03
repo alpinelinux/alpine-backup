@@ -21,7 +21,7 @@ fi
 
 # convert hostname to intra FQDN
 HOSTNAME=$(hostname)
-if [ -n $HOST ]; then
+if [ -n "$HOST" ]; then
         export FQDN="${HOSTNAME}.${HOST}.intra.alpinelinux.org"
 else
         export FQDN="${HOSTNAME}.intra.alpinelinux.org"
