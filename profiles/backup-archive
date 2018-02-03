@@ -1,10 +1,14 @@
 #!/bin/sh
 
+##################################################
+# Keep a montly copy on the first day of the month
+# This should run after the backup-sync profile
+##################################################
+
 DATE=$(date -u "+%Y%m%d%H%M%S")
 SRC="$(hostname).apkovl.tar.gz${SUFFIX}"
 DEST="$(hostname).${DATE}.tar.gz${SUFFIX}"
 
-# Keep a montly copy on the first day of the month
 if [ "$(date +%d)" = "01" ]; then
 	echo "Archiving montly backup"
 	ssh "$BACKUP_SERVER" install -Dm644 "$FQDN"/week/"$SRC" "$FQDN"/month/"$DEST"
