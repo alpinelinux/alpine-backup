@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# To dump pgsql databases make sure to export the following variables.
+# This can be done from /etc/lbu/rbu.conf or add it to this file.
+# PGUSER, PGPASSWORD, PGHOST, PGDATABASE
+# Set GZIP to pigz for multi core compression (if installed)
+
+if [ -n "$PGPASSWORD" ]; then
+	echo "Dumping PostgreSQL database to: $BACKUP_CACHE"
+	pg_dump | ${GZIP:-gzip} > "$BACKUP_CACHE"/dump.sql.gz
+else
+	echo "PostgreSQL password not set, skipping pg_dump."
+fi
