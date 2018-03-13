@@ -14,6 +14,11 @@ features/profiles of RBU are:
 * Copy backup status log to remote location
 * Send status notifications over mqtt
 
+The alpine-backup script itself takes care of capturing the logs, creating the
+snapshot, and updating the status for monitoring. Other tasks such uploading the
+backup should be done through profiles. See the *Minimal Setup* section for
+details.
+
 ## Prerequisite
 
 * POSIX shell
@@ -42,6 +47,18 @@ These profiles/scripts will be run by busybox run-parts which means they cannot
 have an extension and need to be executable. If you need to run these scripts
 in a specific order you should prefix them with a number like `10-scriptname`.
 
+### Minimal setup
+
+The `profiles/` directory contains some default profiles which can be used to
+setup basic back-ups.
+
+At the minimum, you want to add the `backup-sync` script in the `post-package.d`
+directory to actually upload the backup archive to the remote server in the
+homedir of the user provided in `rbu.conf`.
+
+`backup-list` can be placed in the `pre-package.d` directory to generate a list
+of files that are being backed up, which will added to the log.
+
 ### Encryption
 
 To make sure the backups are safe we use openssl encryption option provided by
@@ -68,6 +85,13 @@ public key to the backup server.
 
 Copy the provided `alpine-backup` to `/etc/periodic/daily` to make the backup
 run every night.
+
+### Retention
+
+LBU is configured to keep 7 days of backups. If you also want a monthly backup,
+enable the backup-archive profile in `post-package.d` and make sure that it's
+run after the `backup-sync` profile. This will copy the last created backup at
+the first of each month to the `month/` directory..
 
 ## Backup monitoring
 
