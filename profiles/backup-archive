@@ -11,5 +11,5 @@ DEST="$(hostname).${DATE}.tar.gz${SUFFIX}"
 
 if [ "$(date +%d)" = "01" ]; then
 	echo "Archiving montly backup"
-	ssh "$BACKUP_SERVER" install -Dm644 "$FQDN"/week/"$SRC" "$FQDN"/month/"$DEST"
+	ssh "$RBU_SERVER" install -Dm644 "$FQDN"/week/"$SRC" "$FQDN"/month/"$DEST"
 fi

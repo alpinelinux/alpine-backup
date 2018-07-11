@@ -1,4 +1,4 @@
 #!/bin/sh
 
 echo "Removing mysqldump file"
-rm -f $BACKUP_CACHE/mysql.sql
+rm -f $RBU_CACHE/mysql.sql

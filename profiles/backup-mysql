@@ -1,9 +1,9 @@
 #!/bin/sh
 
 if [ -n "$MYSQL_PASSWORD" ]; then
-	echo "Dumping databases to: $BACKUP_CACHE/mysql.sql"
+	echo "Dumping databases to: $RBU_CACHE/mysql.sql"
 	mysqldump -u root -p${MYSQL_PASSWORD} --all-databases -r \
-		$BACKUP_CACHE/mysql.sql
+		$RBU_CACHE/mysql.sql
 else
 	echo "MySQL password not set, skipping mysqldump."
 fi
