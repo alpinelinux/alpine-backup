@@ -8,6 +8,13 @@ die() {
 	exit 1
 }
 
+mqtt_notify() {
+	local status="$1" size="$2" duration="$3"
+	local payload=$(printf '{ "status": "%s", "size": %u, "duration": %u }' "$status" "$size" "$duration")
+	local json=$(printf '{ "host": "%s", "key": "backup", "payload": %s }' "$FQDN" "$payload")
+	mosquitto_pub -h "$RBU_MQTT_HOST" $RBU_MQTT_TLS -t "$RBU_MQTT_TOPIC" -m "$json" $RBU_MQTT_AUTH
+}
+
 for cmd in $CMD_DEPS; do
 	command -v $cmd >/dev/null 2>&1 || \
 		die "Error: command \"$cmd\" not found."
@@ -54,8 +61,5 @@ fi
 ssh "$RBU_SERVER" mkdir -p $FQDN/logs
 scp -q $LOGFILE "$RBU_SERVER:$FQDN/logs"
 
-PAYLOAD=$(printf '{ "status": "%s", "size": %u, "duration": %u }' "$STATUS" "$SIZE" "$DURATION")
-JSON=$(printf '{ "host": "%s", "key": "backup", "payload": %s }' "$FQDN" "$PAYLOAD")
-
-mosquitto_pub -h msg.alpinelinux.org -t "monitoring/updates" -m "$JSON"
+[ -n "$RBU_MQTT_HOST" ] && mqtt_notify "$STATUS" "$SIZE" "$DURATION"
 
